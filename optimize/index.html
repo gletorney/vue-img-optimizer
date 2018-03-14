@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="description" content="A simple JavaScript image compressor.">
+  <meta name="author" content="@gletorney">
+  <title>Design team / tools / compressor</title>
+  <link rel="shortcut icon" type="image/png" href="favicon.png" sizes="32x32">
+  <link rel="stylesheet" href="v2.css">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, minimal-ui">
+  <link href="https://fonts.googleapis.com/css?family=Work+Sans:400,700" rel="stylesheet">
+</head>
+
+<body>
+  <a href="/" class="block pad-20">&larr; <b>Style Guide</b></a>
+  
+  <div id="app">
+
+    <div class="pad-20">
+      <div class="inline title-1">
+        <b>Image</b> Compressor
+      </div>
+    </div>
+      
+    <div class="input-options pad-top-20">
+      <div class="cols-6">
+        <div class="title-2 pad-bottom-10">Fit within</div>
+        <input type="number" class="form-control" id="inputMaxHeight" placeholder="Height" v-model.number="options.maxHeight">
+        <input type="number" class="form-control" id="inputMaxWidth" placeholder="Width" v-model.number="options.maxWidth">
+      </div>
+      <div class="cols-6">
+          <div class="title-2 pad-bottom-10">Compression</div>
+          <div class="quality-input-wrapper">
+            <input type="radio" value="0.8" name="quality" id="inputQuality-8" v-model.number="options.quality">
+            <label for="inputQuality-8">Recommended</label>
+  
+            <input type="radio" value="0.9"  name="quality" id="inputQuality-9" v-model.number="options.quality">
+            <label for="inputQuality-9">A little less</label>
+  
+            <input type="radio" value="0.6"  name="quality" id="inputQuality-6" v-model.number="options.quality">
+            <label for="inputQuality-6">A little more</label>
+  
+            <input type="radio" value="0.4"  name="quality" id="inputQuality-4" v-model.number="options.quality">
+            <label for="inputQuality-4">A lot more</label>
+  
+            <input type="radio" value="1"  name="quality" id="inputQuality-1" v-model.number="options.quality">
+            <label for="inputQuality-1">No compression</label>
+        </div>          
+      </div>
+    </div>
+
+    <div class="dragover relative" @change="change" @dragover="dragover" @drop="drop">
+
+      <div class="center pad-40">
+        <div class="drop-msg">
+            Drop images or <span class="select-file" onclick="$('#file').click();">select</span>
+        </div>
+        <input class="hide" type="file" id="file" accept="image/jpeg,image/jpg,image/jpe,image/png,image/gif,image/webp,image/bmp,image/tiff" ref="input">
+        <span class="active-msg"></span>
+      </div>
+
+    </div>
+
+    <div id="Results" class="pad-20" v-if="output.name">
+        
+      <div class="title-2 pad-bottom-20">Compressed &mdash;</div>
+      <div class="" v-if="outputURL">
+        <a :download="output.name" :href="outputURL" title="Download the compressed image">
+          <img class="compressed" :src="outputURL" :alt="output.name" @load="getOutputDims()">
+        </a>
+        <div class="">
+          <a class="btn-large" :download="output.name" :href="outputURL" title="Download the compressed image">Download</a>
+        </div>
+      </div>
+      <div v-else class=""></div>
+      <div class="pad-top-20">
+        <b>Name:</b> {{ output.name || '-' }}<br>
+        <b>Size:</b> {{ output.size | prettySize }} <span class="output-dims"></span><br>
+        <b>Compression:</b> <span v-if="output.size">{{ ((1 - (output.size / input.size)) * 100).toFixed(2) }}% reduction</span><span v-else>-</span><br>               
+        <span v-if="timer"><b>Script:</b> {{ timer }}s</b></span>
+      </div>
+      <div class="title-2 border-top pad-top-20">Original &mdash;</div>
+      <!-- Too slow
+      <img class="input-img" :src="inputURL" @load="getInputDims()" style="display:none">
+      -->
+      <div class="pad-bottom-40">
+        <b>Name:</b> {{ input.name || '-' }}<br>
+        <b>Size:</b> {{ input.size | prettySize }} <span class="input-dims"></span><br>
+      </div>
+
+    </div>
+
+    <div class="theme pad-left-20">
+      Theme: 
+      <span class="light-theme hide">Light</span>
+      <span class="color-theme hide">Color</span>
+    </div>
+  </div>
+
+  <footer>
+    <div class="pad-20">
+      Need help? Contact&nbsp;<a href="https://shutterstock.slack.com/messages/C87NL258Q/team/U698A2Z1U/" target="_blank">@gletorney</a>
+    </div>
+  </footer>
+
+  <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"></script>
+  <script src="https://unpkg.com/vue@2.5.3/dist/vue.min.js"></script>
+  <script src="js/image-compressor.min.js"></script>
+  <script src="js/main.js"></script>
+</body>
+</html>
